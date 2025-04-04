@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teclado Virtual Maneiro</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+        }
+        
+        .container {
+            width: 850px;
+            max-width: 95%;
+        }
+        
+        .keyboard {
+            background-color: #2c3e50;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .output {
+            width: 100%;
+            height: 80px;
+            margin-bottom: 20px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 5px;
+            font-size: 24px;
+            padding: 10px;
+            box-sizing: border-box;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+            color: #2c3e50;
+        }
+        
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .key {
+            background-color: #34495e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            padding: 15px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 #2c3e50;
+            min-width: 40px;
+            text-align: center;
+            user-select: none;
+        }
+        
+        .key:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #2c3e50;
+            background-color: #2980b9;
+        }
+        
+        .key:hover {
+            background-color: #3498db;
+        }
+        
+        .key.space {
+            flex-grow: 4;
+        }
+        
+        .key.shift, .key.backspace, .key.enter, .key.tab, .key.capslock {
+            flex-grow: 1.5;
+        }
+        
+        .active {
+            background-color: #e74c3c;
+        }
+        
+        .special {
+            background-color: #e67e22;
+        }
+        
+        .capslock.active {
+            background-color: #27ae60;
+        }
+        
+        .effects {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .effect-btn {
+            background-color: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 #8e44ad;
+        }
+        
+        .effect-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #8e44ad;
+        }
+        
+        .effect-btn:hover {
+            background-color: #8e44ad;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teclado Virtual Maneiro</h1>
+        <textarea class="output" id="output" readonly></textarea>
+        <div class="keyboard" id="keyboard">
+            <div class="row">
+                <div class="key special" data-key="192">~</div>
+                <div class="key special" data-key="49">1</div>
+                <div class="key special" data-key="50">2</div>
+                <div class="key special" data-key="51">3</div>
+                <div class="key special" data-key="52">4</div>
+                <div class="key special" data-key="53">5</div>
+                <div class="key special" data-key="54">6</div>
+                <div class="key special" data-key="55">7</div>
+                <div class="key special" data-key="56">8</div>
+                <div class="key special" data-key="57">9</div>
+                <div class="key special" data-key="48">0</div>
+                <div class="key special" data-key="189">-</div>
+                <div class="key special" data-key="187">=</div>
+                <div class="key backspace" data-key="8">⌫</div>
+            </div>
+            <div class="row">
+                <div class="key tab" data-key="9">Tab</div>
+                <div class="key" data-key="81">Q</div>
+                <div class="key" data-key="87">W</div>
+                <div class="key" data-key="69">E</div>
+                <div class="key" data-key="82">R</div>
+                <div class="key" data-key="84">T</div>
+                <div class="key" data-key="89">Y</div>
+                <div class="key" data-key="85">U</div>
+                <div class="key" data-key="73">I</div>
+                <div class="key" data-key="79">O</div>
+                <div class="key" data-key="80">P</div>
+                <div class="key special" data-key="219">[</div>
+                <div class="key special" data-key="221">]</div>
+                <div class="key special" data-key="220">\</div>
+            </div>
+            <div class="row">
+                <div class="key capslock" data-key="20">Caps</div>
+                <div class="key" data-key="65">A</div>
+                <div class="key" data-key="83">S</div>
+                <div class="key" data-key="68">D</div>
+                <div class="key" data-key="70">F</div>
+                <div class="key" data-key="71">G</div>
+                <div class="key" data-key="72">H</div>
+                <div class="key" data-key="74">J</div>
+                <div class="key" data-key="75">K</div>
+                <div class="key" data-key="76">L</div>
+                <div class="key special" data-key="186">;</div>
+                <div class="key special" data-key="222">'</div>
+                <div class="key enter" data-key="13">Enter</div>
+            </div>
+            <div class="row">
+                <div class="key shift" data-key="16">Shift</div>
+                <div class="key" data-key="90">Z</div>
+                <div class="key" data-key="88">X</div>
+                <div class="key" data-key="67">C</div>
+                <div class="key" data-key="86">V</div>
+                <div class="key" data-key="66">B</div>
+                <div class="key" data-key="78">N</div>
+                <div class="key" data-key="77">M</div>
+                <div class="key special" data-key="188">,</div>
+                <div class="key special" data-key="190">.</div>
+                <div class="key special" data-key="191">/</div>
+                <div class="key shift" data-key="16">Shift</div>
+            </div>
+            <div class="row">
+                <div class="key" data-key="17">Ctrl</div>
+                <div class="key" data-key="18">Alt</div>
+                <div class="key space" data-key="32">Space</div>
+                <div class="key" data-key="18">Alt</div>
+                <div class="key" data-key="17">Ctrl</div>
+            </div>
+        </div>
+        <div class="effects">
+            <button class="effect-btn" id="neon">Efeito Neon</button>
+            <button class="effect-btn" id="rainbow">Efeito Arco-íris</button>
+            <button class="effect-btn" id="typing">Efeito Digitação</button>
+            <button class="effect-btn" id="reset">Resetar</button>
+        </div>
+    </div>
+
+    <script>
+        const output = document.getElementById('output');
+        const keys = document.querySelectorAll('.key');
+        let capsLockActive = false;
+        let shiftActive = false;
+
+        // Mapeamento de teclas
+        const keyMappings = {
+            192: ['`', '~'],
+            49: ['1', '!'],
+            50: ['2', '@'],
+            51: ['3', '#'],
+            52: ['4', '$'],
+            53: ['5', '%'],
+            54: ['6', '^'],
+            55: ['7', '&'],
+            56: ['8', '*'],
+            57: ['9', '('],
+            48: ['0', ')'],
+            189: ['-', '_'],
+            187: ['=', '+'],
+            219: ['[', '{'],
+            221: [']', '}'],
+            220: ['\\', '|'],
+            186: [';', ':'],
+            222: ["'", '"'],
+            188: [',', '<'],
+            190: ['.', '>'],
+            191: ['/', '?'],
+            32: [' ', ' ']
+        };
+
+        // Eventos de clique no teclado virtual
+        keys.forEach(key => {
+            key.addEventListener('click', function() {
+                const dataKey = parseInt(this.getAttribute('data-key'));
+                handleKeyInput(dataKey, this);
+            });
+        });
+
+        // Eventos do teclado físico
+        document.addEventListener('keydown', function(e) {
+            const keyCode = e.keyCode;
+            const keyElement = document.querySelector(`.key[data-key="${keyCode}"]`);
+            
+            if (keyElement) {
+                e.preventDefault();
+                keyElement.classList.add('active');
+                handleKeyInput(keyCode, keyElement);
+            }
+        });
+
+        document.addEventListener('keyup', function(e) {
+            const keyElement = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+            if (keyElement) {
+                keyElement.classList.remove('active');
+            }
+        });
+
+        // Manipulação das teclas
+        function handleKeyInput(keyCode, element) {
+            // Efeito visual
+            element.classList.add('active');
+            setTimeout(() => {
+                element.classList.remove('active');
+            }, 200);
+            
+            // Lógica de acordo com a tecla
+            if (keyCode === 8) { // Backspace
+                output.value = output.value.slice(0, -1);
+            } else if (keyCode === 13) { // Enter
+                output.value += '\n';
+            } else if (keyCode === 16) { // Shift
+                shiftActive = !shiftActive;
+                toggleShift();
+            } else if (keyCode === 20) { // Caps Lock
+                capsLockActive = !capsLockActive;
+                document.querySelector('.capslock').classList.toggle('active');
+                toggleCapsLock();
+            } else if (keyCode === 9) { // Tab
+                output.value += '    ';
+            } else if (keyMappings[keyCode]) { // Teclas alfanuméricas e especiais
+                const [lower, upper] = keyMappings[keyCode];
+                
+                if (shiftActive) {
+                    output.value += upper;
+                } else {
+                    output.value += capsLockActive && lower.match(/[a-z]/i) ? lower.toUpperCase() : lower;
+                }
+            } else if (keyCode >= 65 && keyCode <= 90) { // Letras
+                const letter = String.fromCharCode(keyCode);
+                
+                if ((capsLockActive && !shiftActive) || (!capsLockActive && shiftActive)) {
+                    output.value += letter;
+                } else {
+                    output.value += letter.toLowerCase();
+                }
+            }
+            
+            // Foco no output para mostrar o cursor
+            output.focus();
+        }
+
+        // Alterna maiúsculas e minúsculas para teclas alfabéticas
+        function toggleCapsLock() {
+            keys.forEach(key => {
+                const dataKey = parseInt(key.getAttribute('data-key'));
+                if (dataKey >= 65 && dataKey <= 90) {
+                    if (capsLockActive && !shiftActive) {
+                        key.textContent = key.textContent.toUpperCase();
+                    } else if (!capsLockActive && !shiftActive) {
+                        key.textContent = key.textContent.toLowerCase();
+                    }
+                }
+            });
+        }
+
+        // Alterna entre caracteres normais e especiais (shift)
+        function toggleShift() {
+            keys.forEach(key => {
+                const dataKey = parseInt(key.getAttribute('data-key'));
+                
+                // Para teclas alfabéticas
+                if (dataKey >= 65 && dataKey <= 90) {
+                    if ((capsLockActive && shiftActive) || (!capsLockActive && !shiftActive)) {
+                        key.textContent = key.textContent.toLowerCase();
+                    } else {
+                        key.textContent = key.textContent.toUpperCase();
+                    }
+                }
+                
+                // Para teclas especiais com mapeamento
+                if (keyMappings[dataKey]) {
+                    const [lower, upper] = keyMappings[dataKey];
+                    key.textContent = shiftActive ? upper : lower;
+                }
+            });
+            
+            document.querySelectorAll('.key[data-key="16"]').forEach(key => {
+                key.classList.toggle('active', shiftActive);
+            });
+        }
+
+        // Efeitos especiais
+        document.getElementById('neon').addEventListener('click', function() {
+            document.querySelectorAll('.key').forEach(key => {
+                key.style.boxShadow = '0 0 10px #3498db, 0 0 20px #3498db, 0 0 30px #3498db';
+                key.style.transition = 'all 0.3s';
+            });
+        });
+
+        document.getElementById('rainbow').addEventListener('click', function() {
+            const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#1abc9c', '#3498db', '#9b59b6'];
+            document.querySelectorAll('.key').forEach((key, index) => {
+                key.style.backgroundColor = colors[index % colors.length];
+                key.style.boxShadow = `0 4px 0 ${colors[(index + 1) % colors.length]}`;
+            });
+        });
+
+        document.getElementById('typing').addEventListener('click', function() {
+            document.querySelectorAll('.key').forEach(key => {
+                key.addEventListener('click', createRipple);
+            });
+        });
+
+        document.getElementById('reset').addEventListener('click', function() {
+            document.querySelectorAll('.key').forEach(key => {
+                key.removeAttribute('style');
+                key.removeEventListener('click', createRipple);
+            });
+            document.querySelector('.capslock').classList.remove('active');
+            document.querySelectorAll('.key[data-key="16"]').forEach(shift => {
+                shift.classList.remove('active');
+            });
+            capsLockActive = false;
+            shiftActive = false;
+            output.value = '';
+            toggleCapsLock();
+            toggleShift();
+        });
+
+        // Efeito de ondulação ao clicar
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.getBoundingClientRect().left - diameter / 2}px`;
+            circle.style.top = `${event.clientY - button.getBoundingClientRect().top - diameter / 2}px`;
+            circle.classList.add('ripple');
+            
+            const ripple = button.querySelector('.ripple');
+            if (ripple) {
+                ripple.remove();
+            }
+            
+            button.appendChild(circle);
+            
+            // Adiciona estilo CSS para o efeito de ondulação
+            const style = document.createElement('style');
+            style.textContent = `
+                .key {
+                    position: relative;
+                    overflow: hidden;
+                }
+                .ripple {
+                    position: absolute;
+                    background-color: rgba(255, 255, 255, 0.4);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    pointer-events: none;
+                }
+                @keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+</body>
+</html>
